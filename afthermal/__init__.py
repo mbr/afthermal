@@ -2,6 +2,7 @@ from six import int2byte
 
 from .port import ThrottledSerial
 from .hw import get_command
+from .util import from_range
 
 
 class CommandAliasMixin(object):
@@ -130,11 +131,13 @@ class CommandAliasMixin(object):
         self.send_command('set_printing_density',
                           chr((break_time << 5) | density))
 
-    def set_heat(self, max_dots=7, heat_time=80, interval=2):
-        self.send_command('set_control_parameter',
-                          max_dots,
-                          heat_time,
-                          interval)
+    def set_heat(self, max_dots=64, heat_time=800, interval=20):
+        self.send_command(
+            'set_control_parameter',
+            from_range(8, 2040 + 8, 8, 'max_dots')(max_dots),
+            from_range(30, 2550 + 10, 10, 'heat_time')(heat_time),
+            from_range(0, 2550 + 10, 10, 'heat_interval')(interval),
+        )
 
 
 class ThermalPrinter(CommandAliasMixin):
