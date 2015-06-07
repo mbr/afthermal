@@ -46,3 +46,9 @@ class Format(object):
 
     def __call__(self, buf):
         return self.start + buf + self.end
+
+    @contextmanager
+    def on(self, printer):
+        printer.write(self.start)
+        yield
+        printer.write(self.end)
