@@ -21,12 +21,12 @@ setup(
     license='MIT',
     packages=find_packages(exclude=['tests']),
     install_requires=['pyserial', 'six'],
+    extras_require={
+        'tools': ['click']
+    },
     entry_points={
         'console_scripts': [
-            'commandname = package:func',
+            'afthermal = afthermal.cli:main',
         ],
-        'gui_scripts': [
-            'commandname = package:func',
-        ]
     }
 )
