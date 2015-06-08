@@ -2,7 +2,7 @@ afthermal
 =========
 
 ``afthermal`` is a driver/library for the https://www.adafruit.com/products/597
-thermal printer [1].
+thermal printer [1]_.
 
 Partially, it is inspired by previous efforts:
 
