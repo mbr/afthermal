@@ -14,3 +14,15 @@ It does try to be a little more pythonic and efficient than previous efforts,
 which have mostly been 1:1 ports from other languages.
 
 .. [1] Specification is available at http://www.adafruit.com/datasheets/CSN-A2%20User%20Manual.pdf
+
+
+Installation
+------------
+
+``afthermal`` is installable from ``pip``. It supports an extra feature named
+``tools``, installing it will include numerous tools for calibrating the
+printer or other tasks:
+
+.. code-block:: sh
+
+   $ pip install 'afthermal[tools]'
