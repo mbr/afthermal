@@ -47,6 +47,15 @@ def test(obj):
     p.write("\n\n")
 
 
+@main.command('print-image')
+@click.argument('imagefile', type=click.Path(exists=True))
+@click.pass_obj
+def print_image(obj, imagefile):
+    c = obj['converter']
+
+    c.print_file(imagefile)
+
+
 @main.command()
 @click.option('-h', '--heat-time', type=int,
               help='Do not calibrate heat_time, but set fixed at this value.')
