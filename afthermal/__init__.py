@@ -159,11 +159,11 @@ class ThermalPrinter(CommandAliasMixin):
     def from_config_file(cls, fn='afthermal.conf'):
         cfg = json.load(fn)
 
-        printer = cls.on_serial(cls['device'], cls['baudrate'])
+        printer = cls.on_serial(cfg['device'], cfg['baudrate'])
         printer.set_head(
-            max_dots=cls['max_dots'],
-            heat_time=cls['head_time'],
-            interval=cls['interval']
+            max_dots=cfg['max_dots'],
+            heat_time=cfg['head_time'],
+            interval=cfg['interval']
         )
 
         return printer
