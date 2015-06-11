@@ -1,3 +1,5 @@
+import json
+
 import click
 
 from . import ThermalPrinter, hw
@@ -117,5 +119,13 @@ def calibrate(obj, interval, max_dots, heat_time, yes):
         update_settings(cfg)
 
     p.write('calibration finished\n\n\n\n')
+
+    click.echo('Calibration finished. Put the following into your '
+               'afthermal.conf:')
+
+    cfg['dev'] = p.port.port
+    cfg['baudrate'] = p.port.baudrate
+
+    click.echo(json.dumps(cfg, indent=2))
 
     return

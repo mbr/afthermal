@@ -1,3 +1,5 @@
+import json
+
 from six import int2byte
 
 from .port import ThrottledSerial
@@ -152,6 +154,19 @@ class ThermalPrinter(CommandAliasMixin):
     def on_serial(cls, device='/dev/ttyAMA0', baudrate=19200):
         port = ThrottledSerial(device, baudrate)
         return cls(port)
+
+    @classmethod
+    def from_config_file(cls, fn='afthermal.conf'):
+        cfg = json.load(fn)
+
+        printer = cls.on_serial(cls['device'], cls['baudrate'])
+        printer.set_head(
+            max_dots=cls['max_dots'],
+            heat_time=cls['head_time'],
+            interval=cls['interval']
+        )
+
+        return printer
 
     def write(self, *args, **kwargs):
         self.port.write(*args, **kwargs)
