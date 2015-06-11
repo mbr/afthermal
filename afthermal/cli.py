@@ -35,6 +35,14 @@ def main(ctx, dev, config):
 def test(obj):
     p = obj['printer']
 
+    from afthermal.img.pil import PILImageConverter
+
+    c = PILImageConverter()
+    im = c.from_file_name('lena-rb.png')
+    buf = c.convert(im)
+
+    p.print_image(48, buf)
+
     p.write("Your printer is working.\n\n\n")
 
 
