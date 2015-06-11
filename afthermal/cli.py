@@ -29,17 +29,18 @@ def main(ctx, dev, config):
     if config:
         obj['printer'] = ThermalPrinter.from_config_file(open(config))
 
+    from afthermal.img.pil import PILImageConverter
+    obj['converter'] = PILImageConverter(obj['printer'])
+
 
 @main.command()
 @click.pass_obj
 def test(obj):
     p = obj['printer']
+    c = obj['converter']
 
     p.write("dev: {}\n\n".format(p.port.port))
 
-    from afthermal.img.pil import PILImageConverter
-
-    c = PILImageConverter(p)
     c.print_file(img.LENA_ND_FN)
     c.print_file(img.LENA_RB_FN)
 
