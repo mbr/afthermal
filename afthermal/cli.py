@@ -31,6 +31,14 @@ def main(ctx, dev, config):
 
 
 @main.command()
+@click.pass_obj
+def test(obj):
+    p = obj['printer']
+
+    p.write("Your printer is working.\n\n\n")
+
+
+@main.command()
 @click.option('-h', '--heat-time', type=int,
               help='Do not calibrate heat_time, but set fixed at this value.')
 @click.option('-i', '--interval', type=int,
