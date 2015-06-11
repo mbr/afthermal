@@ -41,15 +41,15 @@ class PILImageConverter(ImageConverter):
     def convert(self, image):
         im = image
 
+        # resize
+        if im.size[0] > self.width:
+            im = im.resize((self.width, int(float(
+                self.width) * im.size[1] / im.size[0]
+            )))
+
         # convert to B/W
         if im.mode != '1':
             im = im.convert('1')
-
-        # resize
-        if im.size[0] > self.width:
-            im = im.resize(self.width, int(float(
-                self.width) * im.size[1] / im.size[0]
-            ))
 
         return (
             self.width / 8,
