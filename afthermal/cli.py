@@ -8,13 +8,26 @@ from .util import in_range
 
 
 @click.group()
-@click.option('-d', '--dev', default='/dev/ttyAMA0')
+@click.option('-c', '--config', type=click.Path(exists=True, dir_okay=False),
+              help='Configuration file for printer settings.')
+@click.option('-d', '--dev', default=None,
+              help='Printer device to use.')
 @click.pass_context
-def main(ctx, dev):
+def main(ctx, dev, config):
     obj = {}
     ctx.obj = obj
     click.echo('Connecting to printer {}'.format(dev))
-    obj['printer'] = ThermalPrinter.on_serial(dev)
+
+    if dev and config:
+        raise ValueError('Can only handle one of --dev, --config.')
+
+    if not (dev or config):
+        dev = '/dev/ttyAMA0'  # default device
+
+    if dev:
+        obj['printer'] = ThermalPrinter.on_serial(dev)
+    if config:
+        obj['printer'] = ThermalPrinter.from_config_file(open(config))
 
 
 @main.command()
