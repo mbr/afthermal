@@ -17,9 +17,9 @@ class OpenCVImageConverter(ImageConverter):
 
         # resize
         if len(img.shape) > 2:
-            w, h, color = img.shape
+            h, w, color = img.shape
         else:
-            w, h = img.shape
+            h, w = img.shape
             color = False
 
         if len(img) > self.width:
