@@ -2,7 +2,7 @@ import json
 
 import click
 
-from . import ThermalPrinter, hw, img
+from . import ThermalPrinter, img
 from .text import Format
 from .util import in_range
 
