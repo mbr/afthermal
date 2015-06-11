@@ -5,9 +5,12 @@ from . import ImageConverter
 
 
 class OpenCVImageConverter(ImageConverter):
-    def __init__(self, printer, width=None, bw_conv='bin_threshold'):
+    def __init__(self, printer, width=None, bw_conv='gauss_threshold',
+                 thresh_c=3, thresh_blksize=5):
         super(OpenCVImageConverter, self).__init__(printer, width)
         self.bw_conv = bw_conv
+        self.thresh_c = thresh_c
+        self.thresh_blksize = thresh_blksize
 
     def open(self, fn):
         return cv2.imread(fn)
@@ -30,10 +33,22 @@ class OpenCVImageConverter(ImageConverter):
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
         # convert to B/W
+        adap_ts = {
+            'mean_threshold': cv2.ADAPTIVE_THRESH_MEAN_C,
+            'gauss_threshold': cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        }
         if np.amax(img) != 1:
             # pass
             if self.bw_conv == 'bin_threshold':
                 img = cv2.threshold(img, 127, 1, cv2.THRESH_BINARY)[1]
+            elif self.bw_conv in adap_ts:
+                img = cv2.adaptiveThreshold(
+                    src=img,
+                    maxValue=1,
+                    adaptiveMethod=adap_ts[self.bw_conv],
+                    thresholdType=cv2.THRESH_BINARY,
+                    blockSize=self.thresh_blksize,
+                    C=self.thresh_c)
             else:
                 raise ValueError('Unknown conversion method: {}'.format(
                     self.bw_conv
