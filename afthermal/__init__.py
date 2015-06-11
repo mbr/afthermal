@@ -126,8 +126,11 @@ class CommandAliasMixin(object):
         self.port.fed_dots(28 * 32)  # 28 lines at fixed 32 dpl
 
     def reset(self):
-        self.send_command('init')
-        self.send_command('set_print_mode', 0)
+        for i in range(10):
+            # we run this a few times to clear data from the buffer. this
+            # usually is necessary if the program crashed mid-print
+            self.send_command('init')
+            self.send_command('set_print_mode', 0)
 
     def set_density(self, density, break_time):
         self.send_command('set_printing_density',
