@@ -27,7 +27,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'afthermal = afthermal.cli:main',
+            'afthermal = afthermal.cli:main [tools]',
         ],
     }
 )
