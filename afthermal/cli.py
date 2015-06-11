@@ -48,6 +48,8 @@ def calibrate(obj, interval, max_dots, heat_time, yes):
                 return val
 
     p = obj['printer']
+    for i in range(10):
+        p.reset()  # a few more times to clear stale data
 
     # Initial setup
     p.write("ready to calibrate\n\n\n")
