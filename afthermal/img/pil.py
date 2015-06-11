@@ -1,6 +1,5 @@
 from PIL import Image
 
-
 from . import ImageConverter
 
 
