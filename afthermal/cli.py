@@ -30,14 +30,14 @@ def main(ctx, dev, config):
         obj['printer'] = ThermalPrinter.from_config_file(open(config))
 
     from afthermal.img.pil import PILImageConverter
-    obj['converter'] = PILImageConverter(obj['printer'])
+    obj['img_converter'] = PILImageConverter(obj['printer'])
 
 
 @main.command()
 @click.pass_obj
 def test(obj):
     p = obj['printer']
-    c = obj['converter']
+    c = obj['img_converter']
 
     p.write("dev: {}\n\n".format(p.port.port))
 
@@ -51,9 +51,22 @@ def test(obj):
 @click.argument('imagefile', type=click.Path(exists=True))
 @click.pass_obj
 def print_image(obj, imagefile):
-    c = obj['converter']
+    c = obj['img_converter']
 
     c.print_file(imagefile)
+
+
+@main.command('print-qrcode')
+@click.argument('text')
+@click.pass_obj
+def print_qrcode(obj, text):
+    import pyqrcode
+    from .img.qr import QRCodeConverter
+
+    converter = QRCodeConverter(obj['printer'])
+    code = pyqrcode.create(text)
+    converter.print_out(code)
+    obj['printer'].write("\n\n")
 
 
 @main.command()

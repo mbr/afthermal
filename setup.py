@@ -22,7 +22,8 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=['pyserial', 'six'],
     extras_require={
-        'tools': ['click']
+        'tools': ['click'],
+        'qrcode': ['pyqrcode'],
     },
     entry_points={
         'console_scripts': [
