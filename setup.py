@@ -23,7 +23,6 @@ setup(
     install_requires=['pyserial', 'six'],
     extras_require={
         'tools': ['click'],
-        'qrcode': ['pyqrcode'],
     },
     entry_points={
         'console_scripts': [
