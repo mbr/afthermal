@@ -17,7 +17,6 @@ from .util import in_range
 def main(ctx, dev, config, space):
     obj = {}
     ctx.obj = obj
-    click.echo('Connecting to printer {}'.format(dev))
 
     if dev and config:
         raise ValueError('Can only handle one of --dev, --config.')
@@ -26,8 +25,10 @@ def main(ctx, dev, config, space):
         dev = '/dev/ttyAMA0'  # default device
 
     if dev:
+        click.echo('Connecting to printer {}'.format(dev))
         obj['printer'] = ThermalPrinter.on_serial(dev)
     if config:
+        click.echo('Loading configuration from {}'.format(config))
         obj['printer'] = ThermalPrinter.from_config_file(open(config))
 
     from afthermal.img.pil import PILImageConverter
