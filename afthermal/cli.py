@@ -43,6 +43,8 @@ def test(obj):
     c = obj['img_converter']
 
     p.write("dev: {}\n\n".format(p.port.port))
+    p.write("heat_t/ival/mdots: {0.heat_time}/{0.interval}/{0.max_dots}"
+            .format(p))
 
     c.print_file(img.LENA_ND_FN)
     c.print_file(img.LENA_RB_FN)

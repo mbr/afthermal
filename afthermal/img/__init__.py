@@ -38,9 +38,16 @@ class ImageConverter(ObjectConverter):
     """Converts images to bitmap data suitable for printing.
 
     :param printer: A :class:`.ThermalPrinter` instance.
+    :param width: Number of dots to print picture with (width). Defaults to
+                  the maximum width of the printer.
     """
-    def __init__(self, printer):
+    def __init__(self, printer, width=None):
         super(ImageConverter, self).__init__(printer)
+
+        if width is None:
+            width = printer.DOTS_PER_LINE
+
+        self.width = width
 
         # use from range to sanity check
         from_range(8, printer.DOTS_PER_LINE+1, 8, 'width')
