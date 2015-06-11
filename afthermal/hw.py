@@ -80,6 +80,7 @@ CMDS = {
 
 
 CHARS_PER_LINE = 32
+DOTS_PER_LINE = 384
 
 
 def get_command(cmd, *args):

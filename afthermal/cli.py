@@ -2,7 +2,7 @@ import json
 
 import click
 
-from . import ThermalPrinter, hw
+from . import ThermalPrinter, hw, img
 from .text import Format
 from .util import in_range
 
@@ -35,15 +35,15 @@ def main(ctx, dev, config):
 def test(obj):
     p = obj['printer']
 
+    p.write("dev: {}\n\n".format(p.port.port))
+
     from afthermal.img.pil import PILImageConverter
 
-    c = PILImageConverter()
-    im = c.from_file_name('lena-rb.png')
-    buf = c.convert(im)
+    c = PILImageConverter(p)
+    c.print_file(img.LENA_ND_FN)
+    c.print_file(img.LENA_RB_FN)
 
-    p.print_image(48, buf)
-
-    p.write("Your printer is working.\n\n\n")
+    p.write("\n\n")
 
 
 @main.command()
