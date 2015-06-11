@@ -47,7 +47,8 @@ def test(obj):
     c.print_file(img.LENA_ND_FN)
     c.print_file(img.LENA_RB_FN)
 
-    p.write("\n\n")
+    if obj['space']:
+        p.write("\n\n")
 
 
 @main.command('print-image')
@@ -57,6 +58,9 @@ def print_image(obj, imagefile):
     c = obj['img_converter']
 
     c.print_file(imagefile)
+
+    if obj['space']:
+        obj['printer'].write("\n\n")
 
 
 @main.command('print-qrcode')
@@ -69,7 +73,9 @@ def print_qrcode(obj, text):
     converter = QRCodeConverter(obj['printer'])
     code = pyqrcode.create(text)
     converter.print_out(code)
-    obj['printer'].write("\n\n")
+
+    if obj['space']:
+        obj['printer'].write("\n\n")
 
 
 @main.command()
