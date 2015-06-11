@@ -12,8 +12,9 @@ from .util import in_range
               help='Configuration file for printer settings.')
 @click.option('-d', '--dev', default=None,
               help='Printer device to use.')
+@click.option('-s/-S', '--space/--no-space', default=True, flag_value=False)
 @click.pass_context
-def main(ctx, dev, config):
+def main(ctx, dev, config, space):
     obj = {}
     ctx.obj = obj
     click.echo('Connecting to printer {}'.format(dev))
@@ -31,6 +32,7 @@ def main(ctx, dev, config):
 
     from afthermal.img.pil import PILImageConverter
     obj['img_converter'] = PILImageConverter(obj['printer'])
+    obj['space'] = space
 
 
 @main.command()
