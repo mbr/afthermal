@@ -134,6 +134,10 @@ class CommandAliasMixin(object):
                           chr((break_time << 5) | density))
 
     def set_heat(self, max_dots=64, heat_time=800, interval=20):
+        self.max_dots = 64
+        self.heat_time = 800
+        self.interval = 20
+
         self.send_command(
             'set_control_parameter',
             from_range(8, 2040 + 8, 8, 'max_dots')(max_dots),
