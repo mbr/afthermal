@@ -13,8 +13,11 @@ from .util import in_range
 @click.option('-d', '--dev', default=None,
               help='Printer device to use.')
 @click.option('-s/-S', '--space/--no-space', default=True, flag_value=False)
+@click.option('-i', '--img-lib', default='opencv',
+              type=click.Choice(['opencv', 'pil']),
+              help='Imaging library to use. OpenCV recommended.')
 @click.pass_context
-def main(ctx, dev, config, space):
+def main(ctx, dev, config, space, img_lib):
     obj = {}
     ctx.obj = obj
 
@@ -31,9 +34,16 @@ def main(ctx, dev, config, space):
         click.echo('Loading configuration from {}'.format(config))
         obj['printer'] = ThermalPrinter.from_config_file(open(config))
 
-    from afthermal.img.pil import PILImageConverter
-    obj['img_converter'] = PILImageConverter(obj['printer'])
     obj['space'] = space
+
+    if img_lib == 'opencv':
+        from afthermal.img.opencv import OpenCVImageConverter
+        obj['img_converter'] = OpenCVImageConverter(obj['printer'])
+    elif img_lib == 'pil':
+        from afthermal.img.pil import PILImageConverter
+        obj['img_converter'] = PILImageConverter(obj['printer'])
+    else:
+        raise ValueError('Unknown image library: {}'.format(img_lib))
 
 
 @main.command()
