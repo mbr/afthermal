@@ -131,7 +131,7 @@ def calibrate(obj, interval, max_dots, heat_time, yes):
     # fills a full line with some special chars at the beginning
     prefix = '#.$%_=ABCDE '
     test_str = Format(invert=True)(
-        '{}{{:>{}s}}\n'.format(prefix, hw.CHARS_PER_LINE - len(prefix))
+        '{}{{:>{}s}}\n'.format(prefix, p.CHARS_PER_LINE - len(prefix))
     )
 
     update_settings(cfg)

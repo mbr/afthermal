@@ -1,7 +1,6 @@
 import os
 
 from ..util import from_range
-from .. import hw
 
 
 # these images have been created with gimp; nd is the normally dithered
@@ -40,13 +39,11 @@ class ImageConverter(ObjectConverter):
 
     :param printer: A :class:`.ThermalPrinter` instance.
     """
-    def __init__(self, printer, width=hw.DOTS_PER_LINE):
+    def __init__(self, printer):
         super(ImageConverter, self).__init__(printer)
 
         # use from range to sanity check
-        from_range(8, hw.DOTS_PER_LINE+1, 8, 'width')
-
-        self.width = width
+        from_range(8, printer.DOTS_PER_LINE+1, 8, 'width')
 
     def open(self, fn):
         """Open image.

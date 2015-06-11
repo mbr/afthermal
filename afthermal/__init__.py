@@ -143,6 +143,9 @@ class CommandAliasMixin(object):
 
 
 class ThermalPrinter(CommandAliasMixin):
+    CHARS_PER_LINE = 32
+    DOTS_PER_LINE = 384
+
     def __init__(self, port):
         self.port = port
         self.reset()
