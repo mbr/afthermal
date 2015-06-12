@@ -15,7 +15,6 @@ cdef inline void add_err(px_t *img, int rows, int cols, int y, int x, int err, i
   img[y * cols + x] = newval
 
 
-# cython: profile=True
 @cython.boundscheck(False)
 cpdef floydsteinberg(np.ndarray[px_t, ndim=2] img):
     # image should be a grayscale image
