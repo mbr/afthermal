@@ -11,15 +11,18 @@ Partially, it is inspired by previous efforts:
 * https://github.com/adafruit/Python-Thermal-Printer/
 * https://github.com/luopio/py-thermal-printer/
 
-It does try to be a little more pythonic and efficient than previous efforts,
-which have mostly been 1:1 ports from other languages. Specifically, it boasts
-additional features such as:
+``afthermal`` try to be more pythonic and efficient than previous efforts,
+which have mostly been 1:1 ports from other languages.
+Additionally it is not focused on education but rather on being a
+reliable library for handling this kind of hardware.
 
+Features include:
+
+* Comfortable handling of text formatting
 * Adapters to print images from PIL_ / Pillow_ as well as OpenCV_
 * A fast Floyd-Steinberg_ implementation to dither OpenCV_ images.
 * Command-line utilities for calibrating the printer for optimum speed and
   quality, as well as other capabilities
-* Comfortable handling of text formatting
 * Support for printing QR codes via PyQRCode_ without having to render them
   into images first
 
