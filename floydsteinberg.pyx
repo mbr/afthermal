@@ -1,35 +1,40 @@
 cimport numpy as np
 cimport cython
 
+ctypedef np.uint8_t px_t;
+
+cdef inline void add_err(px_t *img, int rows, int cols, int y, int x, px_t err, int frac):
+  if x < 0 or y < 0 or x >= cols or y >= rows:
+    return
+
+  cdef px_t newval, val = img[y * cols + x]
+  if err < 0:
+     newval = max(val + err * frac / 16, 0)
+  else:
+      newval = min(val + err * frac / 16, 255)
+  img[y * cols + x] = newval
+
+
 # cython: profile=True
 @cython.boundscheck(False)
-cpdef floydsteinberg(np.ndarray[unsigned char, ndim=2] img):
+cpdef floydsteinberg(np.ndarray[px_t, ndim=2] img):
     # image should be a grayscale image
-
-    cdef np.int16_t [:, :] img2
-    img2 = img.astype('int16')
-
-    cdef int rows = img2.shape[0]
-    cdef int cols = img2.shape[1]
-    cdef int orig, npx, err
+    cdef int rows = img.shape[0]
+    cdef int cols = img.shape[1]
+    cdef px_t orig, npx, err
     cdef int x, y
+    cdef px_t* data = <px_t*> img.data
 
     for y in range(rows):
         for x in range(cols):
-            orig = img2[y,x]
-            npx = 255 if img2[y,x] > 127 else 0
-            img2[y,x] = npx
+            orig = data[y * cols + x]
+            npx = 255 if data[y * cols + x] > 127 else 0
+            data[y * cols + x] = npx
             err = orig - npx
 
-            if x < cols - 1:
-                img2[y,x+1] += err * 7 / 16
+            add_err(data, rows, cols, y, x+1, err, 7)
+            add_err(data, rows, cols, y+1, x-1, err, 3)
+            add_err(data, rows, cols, y+1, x, err, 5)
+            add_err(data, rows, cols, y+1, x+1, err, 1)
 
-            if y < rows - 1:
-                if x > 0:
-                    img2[y+1,x-1] +=  err * 3 / 16
-
-                img2[y+1,x-1] += err * 5 / 16
-                if x < cols - 1:
-                    img2[y+1,x+1] += err * 1 / 16
-
-    return img2
+    return img
