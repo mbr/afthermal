@@ -3,7 +3,7 @@ cimport cython
 
 ctypedef np.uint8_t px_t;
 
-cdef inline void add_err(px_t *img, int rows, int cols, int y, int x, px_t err, int frac):
+cdef inline void add_err(px_t *img, int rows, int cols, int y, int x, int err, int frac):
   if x < 0 or y < 0 or x >= cols or y >= rows:
     return
 
@@ -21,7 +21,7 @@ cpdef floydsteinberg(np.ndarray[px_t, ndim=2] img):
     # image should be a grayscale image
     cdef int rows = img.shape[0]
     cdef int cols = img.shape[1]
-    cdef px_t orig, npx, err
+    cdef int orig, npx, err
     cdef int x, y
     cdef px_t* data = <px_t*> img.data
 
