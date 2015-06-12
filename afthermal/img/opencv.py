@@ -5,7 +5,7 @@ from . import ImageConverter
 
 
 class OpenCVImageConverter(ImageConverter):
-    def __init__(self, printer, width=None, bw_conv='gauss_threshold',
+    def __init__(self, printer, width=None, bw_conv='floydsteinberg',
                  thresh_c=3, thresh_blksize=5):
         super(OpenCVImageConverter, self).__init__(printer, width)
         self.bw_conv = bw_conv
@@ -49,6 +49,9 @@ class OpenCVImageConverter(ImageConverter):
                     thresholdType=cv2.THRESH_BINARY,
                     blockSize=self.thresh_blksize,
                     C=self.thresh_c)
+            elif self.bw_conv == 'floydsteinberg':
+                from floydsteinberg import floydsteinberg
+                img = floydsteinberg(img)
             else:
                 raise ValueError('Unknown conversion method: {}'.format(
                     self.bw_conv
