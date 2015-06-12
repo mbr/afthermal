@@ -27,7 +27,7 @@ if USE_CYTHON:
 
 setup(
     name='afthermal',
-    version='0.1.dev1',
+    version='0.3.dev1',
     description='',
     long_description=read('README.rst'),
     author='Marc Brinkmann',
