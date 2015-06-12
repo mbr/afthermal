@@ -4,6 +4,7 @@
 import os
 
 from setuptools import setup, find_packages
+from Cython.Build import cythonize
 
 
 def read(fname):
@@ -28,5 +29,6 @@ setup(
         'console_scripts': [
             'afthermal = afthermal.cli:main [tools]',
         ],
-    }
+    },
+    ext_modules=cythonize("floydsteinberg.pyx"),
 )
