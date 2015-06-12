@@ -36,15 +36,16 @@ Installation
 ------------
 
 ``afthermal`` is installable from ``pip``. It supports an extra feature named
-``tools``, installing it will include numerous tools for calibrating the
-printer or other tasks:
+``tools``, installing it will include cli tools for calibrating the
+printer, printing test images or other tasks:
 
 .. code-block:: sh
 
    $ pip install 'afthermal[tools]'
 
 It includes a C extension for Floyd-Steinberg_ dithering, since OpenCV_ does
-not ship with a dithering function.
+not ship with a dithering function. For this reason C-modules must be
+compileable when installing ``afthermal``.
 
 
 Full docs
