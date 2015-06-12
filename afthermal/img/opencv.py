@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 
 from . import ImageConverter
+from .floydsteinberg import floydsteinberg
 
 
 class OpenCVImageConverter(ImageConverter):
@@ -50,7 +51,6 @@ class OpenCVImageConverter(ImageConverter):
                     blockSize=self.thresh_blksize,
                     C=self.thresh_c)
             elif self.bw_conv == 'floydsteinberg':
-                from floydsteinberg import floydsteinberg
                 img = floydsteinberg(img)
             else:
                 raise ValueError('Unknown conversion method: {}'.format(
