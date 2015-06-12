@@ -3,12 +3,26 @@
 
 import os
 
-from setuptools import setup, find_packages
-from Cython.Build import cythonize
+from setuptools import setup, find_packages, Extension
 
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+
+USE_CYTHON = True
+try:
+    import Cython
+except ImportError:
+    USE_CYTHON = False
+
+ext = '.pyx' if USE_CYTHON else '.c'
+extensions = [Extension('afthermal.img.floydsteinberg',
+                        ['afthermal/img/floydsteinberg' + ext])]
+
+if USE_CYTHON:
+    from Cython.Build import cythonize
+    extensions = cythonize(extensions)
 
 
 setup(
@@ -30,5 +44,5 @@ setup(
             'afthermal = afthermal.cli:main [tools]',
         ],
     },
-    ext_modules=cythonize("floydsteinberg.pyx"),
+    ext_modules=extensions,
 )
