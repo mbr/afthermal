@@ -4,6 +4,16 @@ from .hw import get_command
 
 
 class Format(object):
+    """Format text using printer specific escape sequences.
+
+    :param bold: Enabled bold face.
+    :param invert: Enable white-on-blasck priting.
+    :param upside_down: Turn letters upside down.
+    :param underline: Underline text.
+    :param double_width: Print characters twice as wide.
+    :param double_height: Print characters twice as high.
+    :param strikethrough: Enable strikethrough.
+    """
     def __init__(self, bold=False, invert=False, upside_down=False,
                  underline=False, double_width=False, double_height=False,
                  strikethrough=False):
@@ -45,10 +55,12 @@ class Format(object):
         self.end = end
 
     def __call__(self, buf):
+        """Format text using format escape sequences."""
         return self.start + buf + self.end
 
     @contextmanager
     def on(self, printer):
+        """Enable formatting inside context manager."""
         printer.write(self.start)
         yield
         printer.write(self.end)
