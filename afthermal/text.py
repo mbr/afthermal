@@ -3,6 +3,16 @@ from contextlib import contextmanager
 from .hw import get_command
 
 
+# use HTML-like for text?
+#
+# <b>: bold
+# <inv>: invert
+# <updown>: upside down
+# <u>: underline
+# <dw>: double width
+# <dh>: double height
+# <del>: strike through
+
 class Format(object):
     """Format text using printer specific escape sequences.
 
