@@ -1,3 +1,4 @@
+from collections import Counter
 from contextlib import contextmanager
 
 from .hw import get_command
@@ -35,21 +36,32 @@ class ByteStringVisitor(Visitor):
     def __init__(self, encoding='ascii'):
         super(ByteStringVisitor, self).__init__()
         self.encoding = encoding
+        self.mode_stack = Counter()
 
     def visit_FormatMode(self, node):
         buf = []
-        buf.append(node.SEQ_ON)
+
+        # if we're not in the correct mode, activate
+        if not self.mode_stack[node.SEQ_ON]:
+            buf.append(node.SEQ_ON)
+        self.mode_stack[node.SEQ_ON] += 1
 
         for child in node.children:
             buf.append(self.visit(child))
 
-        buf.append(node.SEQ_OFF)
+        # deactivate mode if we're done with it
+        self.mode_stack[node.SEQ_ON] -= 1
+        if not self.mode_stack[node.SEQ_ON]:
+            buf.append(node.SEQ_OFF)
 
         return b''.join(buf)
 
     def visit_Text(self, node):
         # FIXME: escape special chars
         return node.text.encode(self.encoding)
+
+    def visit_Node(self, node):
+        return b''.join(map(self.visit, node.children))
 
 
 class FormatMode(Node):
