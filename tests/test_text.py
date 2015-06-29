@@ -1,4 +1,4 @@
-from afthermal.text import Text, ByteStringVisitor, Bold, Node
+from afthermal.text import Text, ByteStringVisitor, Bold, Node, DoubleWidth
 
 import pytest
 
@@ -33,3 +33,10 @@ def test_nested_formatting(bsv, encoding):
         b'\x1B\x45\x01' + u'helloworld'.encode(encoding) + b'\x1B\x45\x00' +
         'nonbold'.encode(encoding)
     )
+
+
+def test_double_width(bsv, encoding):
+    tx = DoubleWidth(Text(u'abc'))
+
+    assert bsv.visit(tx) == (b'\x1D\x21\x20' + u'abc'.encode(encoding) +
+                             b'\x1D\x21\x00')

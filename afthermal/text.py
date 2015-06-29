@@ -27,6 +27,28 @@ class Visitor(object):
                                   .format(node.__class__.__name__))
 
 
+class FormattingState(Counter):
+    def enable_seq(self, seq):
+        self[seq] += 1
+        if self[seq] == 1:
+            return seq
+
+        return b''
+
+    def disable_seq(self, seq, off_seq):
+        self[seq] -= 1
+        if not self[seq]:
+            return off_seq
+
+        return b''
+
+    @contextmanager
+    def enabled(self, buf, seq, off_seq):
+        buf.append(self.enable_seq(seq))
+        yield
+        buf.append(self.disable_seq(seq, off_seq))
+
+
 class Node(object):
     def __init__(self, *children):
         self.children = children
@@ -36,23 +58,30 @@ class ByteStringVisitor(Visitor):
     def __init__(self, encoding='ascii'):
         super(ByteStringVisitor, self).__init__()
         self.encoding = encoding
-        self.mode_stack = Counter()
+        self.formats = FormattingState()
+        self.enlarge = FormattingState()
 
     def visit_FormatMode(self, node):
         buf = []
 
         # if we're not in the correct mode, activate
-        if not self.mode_stack[node.SEQ_ON]:
-            buf.append(node.SEQ_ON)
-        self.mode_stack[node.SEQ_ON] += 1
+        with self.formats.enabled(buf, node.SEQ_ON, node.SEQ_OFF):
+            for child in node.children:
+                buf.append(self.visit(child))
 
-        for child in node.children:
-            buf.append(self.visit(child))
+        return b''.join(buf)
 
-        # deactivate mode if we're done with it
-        self.mode_stack[node.SEQ_ON] -= 1
-        if not self.mode_stack[node.SEQ_ON]:
-            buf.append(node.SEQ_OFF)
+    def visit_EnlargeMode(self, node):
+        buf = []
+
+        # if we're not in the correct mode, activate
+        with self.formats.enabled(
+            buf,
+            get_command('set_font_enlarge', node.FLAG),
+            get_command('set_font_enlarge', 0)
+        ):
+            for child in node.children:
+                buf.append(self.visit(child))
 
         return b''.join(buf)
 
@@ -65,6 +94,10 @@ class ByteStringVisitor(Visitor):
 
 
 class FormatMode(Node):
+    pass
+
+
+class EnlargeMode(Node):
     pass
 
 
@@ -93,43 +126,14 @@ class Underline(FormatMode):
     SEQ_OFF = get_command('set_underline', 0)
 
 
-class Format(object):
-    """Format text using printer specific escape sequences.
+class Strikethrough(FormatMode):
+    SEQ_ON = get_command('set_print_mode', 1 << 6)
+    SEQ_ON = get_command('set_print_mode', 0)
 
-    :param bold: Enabled bold face.
-    :param invert: Enable white-on-blasck priting.
-    :param upside_down: Turn letters upside down.
-    :param underline: Underline text.
-    :param double_width: Print characters twice as wide.
-    :param double_height: Print characters twice as high.
-    :param strikethrough: Enable strikethrough.
-    """
-    def __init__(self, bold=False, invert=False, upside_down=False,
-                 underline=False, double_width=False, double_height=False,
-                 strikethrough=False):
-        start = b''
-        end = b''
 
-        enlarge = 0
-        if double_width:
-            enlarge |= 32
-        if double_height:
-            enlarge |= 1
+class DoubleWidth(EnlargeMode):
+    FLAG = 32
 
-        if enlarge:
-            start += get_command('set_font_enlarge', enlarge)
-            end = get_command('set_font_enlarge', 0) + end
 
-        self.start = start
-        self.end = end
-
-    def __call__(self, buf):
-        """Format text using format escape sequences."""
-        return self.start + buf + self.end
-
-    @contextmanager
-    def on(self, printer):
-        """Enable formatting inside context manager."""
-        printer.write(self.start)
-        yield
-        printer.write(self.end)
+class DoubleHeight(EnlargeMode):
+    FLAG = 1
