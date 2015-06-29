@@ -48,35 +48,17 @@ class ByteStringVisitor(Visitor):
         return b''.join(buf)
 
     def visit_Text(self, node):
+        # FIXME: escape special chars
         return node.text.encode(self.encoding)
 
 
 class FormatMode(Node):
-    def _enter(self, encoding):
-        raise NotImplementedError
-
-    def _exit(self, encoding):
-        raise NotImplementedError
-
-    def to_bytestring(self, encoding='ascii'):
-        buf = []
-        buf.append(self._enter(encoding))
-
-        for child in self.children:
-            buf.append(child.to_bytestring(encoding))
-
-        buf.append(self._exit(encoding))
-
-        return b''.join(buf)
+    pass
 
 
 class Text(object):
     def __init__(self, text):
         self.text = text
-
-    def to_bytestring(self, encoding='ascii'):
-        # FIXME: escape special chars
-        return self.text.encode(encoding)
 
 
 class UpsideDown(FormatMode):
