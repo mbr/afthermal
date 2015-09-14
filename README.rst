@@ -1,6 +1,10 @@
 afthermal
 =========
 
+.. note:: afthermal is currently in alpha status. This is a snapshot release of
+          the development branch. While it is used productively, some features
+          may be unfinished or undocumented.
+
 ``afthermal`` is a driver/library for the popular `Adafruit
 <https://www.adafruit.com/products/597>`_ (originally Cashino
 A2) thermal printer [1]_.
